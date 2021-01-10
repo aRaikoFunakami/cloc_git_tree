@@ -1,0 +1,17 @@
+#!/bin/bash
+
+usage_exit() {
+    echo "Usage: $0 dir(s)" 1>&2
+    exit 1
+}
+
+for d in $*
+do 
+    if [ -d $d ]; then
+       cloc $d --csv --quiet --timeout 60 \
+       | tail +3 \
+       | sed "s@^@$d,@"
+    else
+        echo "ignore: $d is not directory" 1>&2 
+    fi
+done | sed 1i"dir, files, language, blank, comment, code"
